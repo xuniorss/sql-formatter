@@ -1,9 +1,11 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
+import { Montserrat } from 'next/font/google'
 import './globals.css'
 import { ReactNode } from 'react'
+import { ThemeProvider } from '@/components/theme-provider'
+import { cn } from '@/lib/utils'
 
-const inter = Inter({ subsets: ['latin'] })
+const font = Montserrat({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
 	title: 'Create Next App',
@@ -16,8 +18,17 @@ export default function RootLayout({
 	children: ReactNode
 }>) {
 	return (
-		<html lang="pt-BR">
-			<body className={inter.className}>{children}</body>
+		<html lang="pt-BR" suppressHydrationWarning>
+			<body className={cn('bg-neutral-900 antialiased', font.className)}>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="dark"
+					enableSystem={false}
+					disableTransitionOnChange
+				>
+					{children}
+				</ThemeProvider>
+			</body>
 		</html>
 	)
 }
