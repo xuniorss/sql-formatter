@@ -16,9 +16,10 @@ export default function Home() {
 		setOutputSql(formatted)
 	}, [sql])
 
-	const handleClear = useCallback(() => {
+	const handleClear = useCallback(async () => {
 		setSql('')
 		setOutputSql(null)
+		await navigator.clipboard.writeText('')
 	}, [])
 
 	return (

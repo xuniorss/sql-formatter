@@ -2,7 +2,7 @@ import { cleanSql } from './cleanSql'
 import { formatLines } from './formatLines'
 
 export const formatSql = (sqlText: string): string => {
-	let cleanedSql = cleanSql(sqlText)
+	let cleanedSql = cleanSql(sqlText).toUpperCase()
 
 	const lines = cleanedSql
 		.split('\n')
