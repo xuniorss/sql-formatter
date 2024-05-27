@@ -2,53 +2,65 @@
 
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
+import { copyToClipboard } from '@/utils/copyToClipboard'
+import { formatSql } from '@/utils/formatSql'
+import { ClipboardCopy, Eraser } from 'lucide-react'
 import { useCallback, useState } from 'react'
 
 export default function Home() {
 	const [sql, setSql] = useState('')
-	const [outputSql, setOutputSql] = useState('')
-
-	const formatSql = useCallback((sqlText: string): string => {
-		let cleanSql = Array.from(sqlText)
-			.filter((char) => char.charCodeAt(0) <= 127)
-			.join('')
-
-		const lines = cleanSql
-			.split('\n')
-			.map((line) => line.trim())
-			.filter((line) => line !== '')
-
-		const formattedLines = lines.map((line, index) => {
-			const suffix = index < lines.length - 1 ? ',' : ''
-			return `\t AS ${line}${suffix}`
-		})
-
-		return `SELECT DISTINCT\n${formattedLines.join('\n')}\nFROM`
-	}, [])
+	const [outputSql, setOutputSql] = useState<string | null>(null)
 
 	const handleClick = useCallback(() => {
 		const formatted = formatSql(sql)
 		setOutputSql(formatted)
-	}, [formatSql, sql])
+	}, [sql])
+
+	const handleClear = useCallback(() => {
+		setSql('')
+		setOutputSql(null)
+	}, [])
 
 	return (
 		<section className="grid grid-cols-2 gap-x-8">
-			<div className="flex flex-col gap-y-4">
+			<div className="flex flex-col space-y-4">
 				<Textarea
 					value={sql}
 					onChange={(ev) => setSql(ev.target.value)}
 					rows={35}
 					className="resize-none"
 				/>
-				<Button onClick={handleClick} disabled={sql.length <= 0}>
-					Ajustar
-				</Button>
+				<div className="flex w-full flex-row gap-x-4">
+					<Button
+						className="w-2/4"
+						onClick={handleClick}
+						disabled={sql.length <= 0}
+					>
+						Ajustar
+					</Button>
+					<Button
+						className="w-2/4"
+						variant="ghost"
+						onClick={handleClear}
+						disabled={sql.length <= 0}
+					>
+						<Eraser />
+					</Button>
+				</div>
 			</div>
 
-			<section>
-				<div className="h-[48.75rem] overflow-y-auto rounded-lg border-2 border-zinc-700">
+			<section className="space-y-4">
+				<div className="h-[718.5px] overflow-y-auto rounded-lg border-2 border-zinc-700">
 					<pre className="p-2">{outputSql}</pre>
 				</div>
+				<Button
+					className="w-full"
+					disabled={!outputSql}
+					variant={!outputSql ? 'outline' : 'secondary'}
+					onClick={() => copyToClipboard(outputSql)}
+				>
+					<ClipboardCopy />
+				</Button>
 			</section>
 		</section>
 	)
