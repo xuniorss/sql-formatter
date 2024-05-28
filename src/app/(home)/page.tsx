@@ -51,7 +51,7 @@ export default function Home() {
 			</div>
 
 			<section className="space-y-4">
-				<div className="h-[718.5px] overflow-y-auto rounded-lg border-2 border-zinc-700">
+				<div className="h-[44.9063rem] overflow-y-auto rounded-lg border-2 border-zinc-700">
 					<pre className="p-2">{outputSql}</pre>
 				</div>
 				<Button
